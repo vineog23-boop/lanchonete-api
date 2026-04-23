@@ -7,41 +7,47 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 import java.util.UUID;
-import org.hibernate.annotations.GenericGenerator;
-
-@Entity
-@Table(name = "tb_endereco") // Nome da tabela conforme especificado
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "tb_endereco")
+
 public class Endereco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id_endereco", columnDefinition = "VARCHAR(36)") // Nome e tipo da coluna
+    @Column(name = "id_endereco", length = 36) // Nome e tipo da coluna
     private UUID idEndereco;
 
-    @Column(name = "logradouro", nullable = false) // NOT NULL
+    @ManyToOne // Indica que muitos Enderecos se relacionam com um unico Cliente
+   @JoinColumn(name = "id_cliente", nullable = false) // Define a coluna de chave estrangeira na tabela tb_endereco
+   private Cliente cliente; // Atributo que referencia o Cliente ao qual este Endereco pertence
+
+    @Column(name = "logradouro", nullable = false)
     private String logradouro;
 
-    @Column(name = "numero", nullable = false) // NOT NULL
+    @Column(name = "numero", nullable = false)
     private String numero;
 
-    @Column(name = "bairro", nullable = false) // NOT NULL
+    @Column(name = "bairro", nullable = false)
     private String bairro;
 
-    @Column(name = "cidade", nullable = false) // NOT NULL
+    @Column(name = "cidade", nullable = false)
     private String cidade;
 
-    @Column(name = "estado", length = 2, nullable = false) // CHAR(2), NOT NULL
+    @Column(name = "estado", length = 2, nullable = false)
     private String estado;
 
-    @Column(name = "cep", nullable = false) // NOT NULL
+    @Column(name = "cep", nullable = false)
     private String cep;
 
-    @Column(name = "complemento") // nullable
+    @Column(name = "complemento")
     private String complemento;
+
+
 
 
 }

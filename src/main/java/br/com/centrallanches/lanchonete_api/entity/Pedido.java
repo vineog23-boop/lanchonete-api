@@ -9,14 +9,17 @@ import lombok.Setter;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.UUID;
-import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name = "tb_pedido")
+
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "tb_pedido")
+
 public class Pedido {
 
     @Id
@@ -24,6 +27,17 @@ public class Pedido {
     @Column(name = "id_pedido", columnDefinition = "VARCHAR(36)")
     private UUID idPedido;
 
+    @ManyToOne
+    @JoinColumn(name = "id_cliente", nullable = false)
+    private Cliente cliente;
+
+    @ManyToOne
+    @JoinColumn(name = "id_entregador")
+    private Entregador entregador;
+
+    @ManyToOne
+    @JoinColumn(name = "id_endereco", nullable = false)
+    private Endereco endereco;
 
     @Enumerated(EnumType.STRING) //
     @Column(name = "status", nullable = false)
