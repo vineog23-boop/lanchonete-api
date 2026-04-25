@@ -20,7 +20,7 @@ public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_endereco", length = 36) // Nome e tipo da coluna
-    private UUID idEndereco;
+    private UUID id;
 
     @ManyToOne // Indica que muitos Enderecos se relacionam com um unico Cliente
    @JoinColumn(name = "id_cliente", nullable = false) // Define a coluna de chave estrangeira na tabela tb_endereco

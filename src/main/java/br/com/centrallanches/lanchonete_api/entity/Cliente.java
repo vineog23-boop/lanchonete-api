@@ -22,7 +22,7 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_cliente", length = 36)
-    private UUID idCliente;
+    private UUID id;
 
     /*
      * cascade = CascadeType.ALL: operações no Cliente (salvar, deletar) se propagam para os Enderecos
@@ -35,6 +35,8 @@ public class Cliente {
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Pedido> pedidos = new ArrayList<>();
+
+
 
 
     @Column(name = "nome", nullable = false)

@@ -18,7 +18,7 @@ public class Entregador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_entregador")
-    private Integer idEntregador;
+    private Integer id;
 
 
     @Column(name = "nome", nullable = false)
