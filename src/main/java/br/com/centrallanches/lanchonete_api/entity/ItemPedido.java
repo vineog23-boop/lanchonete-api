@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,9 +18,9 @@ import java.util.UUID;
 public class ItemPedido {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column(name = "id_item_pedido", columnDefinition = "VARCHAR(36)")
-    private Integer  id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_item_pedido")
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "id_pedido", nullable = false)
