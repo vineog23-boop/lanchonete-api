@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "tb_item_pedido")
+
 public class ItemPedido {
 
     @Id

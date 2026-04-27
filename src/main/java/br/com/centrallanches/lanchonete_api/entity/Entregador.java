@@ -7,12 +7,15 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "tb_entregador")
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "tb_entregador")
+
 public class Entregador {
 
     @Id

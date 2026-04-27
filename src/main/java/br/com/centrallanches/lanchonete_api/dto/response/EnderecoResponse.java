@@ -1,12 +1,12 @@
-package br.com.centrallanches.lanchonete_api.dto;
+package br.com.centrallanches.lanchonete_api.dto.response;
+
 
 import java.util.UUID;
 
-public record EnderecoRequest(
-        UUID clienteId,
+public record EnderecoResponse(
+        UUID id,
         String logradouro,
         String numero,
-        String bairro,
         String cidade,
         String estado,
         String cep,

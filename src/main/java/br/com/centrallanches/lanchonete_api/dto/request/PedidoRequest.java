@@ -1,4 +1,4 @@
-package br.com.centrallanches.lanchonete_api.dto;
+package br.com.centrallanches.lanchonete_api.dto.request;
 
 import java.util.List;
 import java.util.UUID;

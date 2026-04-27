@@ -1,5 +1,7 @@
 package br.com.centrallanches.lanchonete_api.services;
 
+import br.com.centrallanches.lanchonete_api.dto.request.EntregadorRequest;
+import br.com.centrallanches.lanchonete_api.dto.response.EntregadorResponse;
 import br.com.centrallanches.lanchonete_api.entity.Entregador;
 import br.com.centrallanches.lanchonete_api.repository.EntregadorRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +16,15 @@ public class EntregadorService {
 
     private final EntregadorRepository entregadorRepository;
 
-    public Entregador save (Entregador entregador) {                     // MÉTODO CREATE
-        return entregadorRepository.save(entregador);
+    public EntregadorResponse save (EntregadorRequest entregadorRequest) {
+                                                                                // MÉTODO CREATE
+        Entregador entregador = new Entregador();
+        entregador.setNome(entregadorRequest.nome());
+        entregador.setCelular(entregadorRequest.celular());
+
+        Entregador salvo = entregadorRepository.save(entregador);
+
+        return new EntregadorResponse (salvo.getId(), salvo.getNome(), salvo.getCelular());
     }
 
 

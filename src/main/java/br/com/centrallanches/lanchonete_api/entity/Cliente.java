@@ -11,12 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "tb_cliente")
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "tb_cliente")
+
 public class Cliente {
 
     @Id
