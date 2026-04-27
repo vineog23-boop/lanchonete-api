@@ -17,20 +17,21 @@ A **lanchonete-api** é uma API REST para gerenciamento de pedidos, produtos, cl
 
 O objetivo é substituir uma operação que hoje vive no papel e na memória por um sistema com dados organizados, relacionamentos bem definidos e comportamento previsível.
 
-> 🚧 Projeto em desenvolvimento ativo. As camadas de Controller e Service estão sendo implementadas.
+> ✅ Projeto com camadas de Controller, Service, DTO e Repository implementadas. API REST funcional e modelagem relacional concluída.
 
 ---
 
 ## ✨ Funcionalidades
 
-- ✅ Modelagem completa das entidades: Cliente, Produto, Pedido, Entregador, Endereço
-- ✅ Relacionamentos JPA mapeados: Cliente → Pedidos, Cliente → Endereços, Pedido → Entregador
-- ✅ Controle de status do pedido via enum (RECEBIDO → EM_PREPARO → SAIU_PARA_ENTREGA → ENTREGUE)
-- ✅ Categorização de produtos via enum (SALGADO, DOCE, BEBIDA, COMBOS, OUTROS)
-- ✅ Repositórios Spring Data JPA para todas as entidades
-- 🚧 Endpoints REST (Controllers em implementação)
-- 🚧 Camada de Service com regras de negócio
-- 🚧 Documentação interativa com Swagger UI
+- ✅ Modelagem completa das entidades: Cliente, Produto, Pedido, Entregador, Endereço, ItemPedido
+- ✅ Relacionamentos JPA mapeados
+- ✅ Controle de status do pedido via enum
+- ✅ Categorização de produtos via enum
+- ✅ Repositórios Spring Data JPA
+- ✅ Endpoints REST implementados
+- ✅ Camada de Service com regras de negócio
+- ✅ DTOs para Request e Response
+- ✅ Documentação interativa com Swagger UI
 
 ---
 
@@ -39,7 +40,7 @@ O objetivo é substituir uma operação que hoje vive no papel e na memória por
 | Tecnologia        | Versão  | Descrição                                        |
 |-------------------|---------|--------------------------------------------------|
 | Java              | 21      | Linguagem de programação                         |
-| Spring Boot       | 4.0.5   | Framework principal                              |
+| Spring Boot       | 3.2+    | Framework principal                              |
 | Spring Web MVC    | 4.0.5   | Camada REST (controllers e serialização)         |
 | Spring Data JPA   | 4.0.5   | Repositórios e acesso a dados via JPA            |
 | Spring Validation | 4.0.5   | Validação de entrada na camada de Controller     |
