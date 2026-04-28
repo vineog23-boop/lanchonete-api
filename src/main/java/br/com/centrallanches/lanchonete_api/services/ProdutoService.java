@@ -1,40 +1,63 @@
 package br.com.centrallanches.lanchonete_api.services;
 
+import br.com.centrallanches.lanchonete_api.dto.request.ProdutoRequest;
+import br.com.centrallanches.lanchonete_api.dto.response.ProdutoResponse;
 import br.com.centrallanches.lanchonete_api.entity.Produto;
 import br.com.centrallanches.lanchonete_api.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
-
+@RequiredArgsConstructor
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
 
-    public Produto save (Produto produto) {                     // MÉTODO CREATE
-        return produtoRepository.save(produto);
+    public ProdutoResponse save(ProdutoRequest request) {
+        Produto entity = new Produto();
+        entity.setNome(request.nome());
+        entity.setPreco(request.preco());
+        entity.setCategoria(request.categoria());
+
+        Produto savedEntity = produtoRepository.save(entity);
+
+        return new ProdutoResponse(savedEntity.getId(), savedEntity.getNome(), savedEntity.getPreco(), savedEntity.getCategoria());
     }
 
+    public ProdutoResponse findById(Integer id) {
+        Produto entity = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto com ID: " + id + " não encontrado"));
 
-    public Produto findById(Integer  id) {
-        return produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("O produto selecionado : " + ( id ) + " não foi encontrado"));
+        return new ProdutoResponse(entity.getId(), entity.getNome(), entity.getPreco(), entity.getCategoria());
     }
 
-    public List<Produto> findAll() {
-        return produtoRepository.findAll();
+    public List<ProdutoResponse> findAll() {
+        return produtoRepository.findAll()
+                .stream()
+                .map(entity -> new ProdutoResponse(entity.getId(), entity.getNome(), entity.getPreco(), entity.getCategoria()))
+                .collect(Collectors.toList());
     }
 
-    public Produto update(Produto endereco) {
-        return produtoRepository.save(endereco);
+    public ProdutoResponse update(ProdutoRequest request, Integer id) {
+        Produto entity = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto com ID: " + id + " não encontrado para atualização"));
+
+        entity.setNome(request.nome());
+        entity.setPreco(request.preco());
+        entity.setCategoria(request.categoria());
+
+        Produto savedEntity = produtoRepository.save(entity);
+
+        return new ProdutoResponse(savedEntity.getId(), savedEntity.getNome(), savedEntity.getPreco(), savedEntity.getCategoria());
     }
 
     public void delete(Integer id) {
+        if (!produtoRepository.existsById(id)) {
+            throw new RuntimeException("Produto com ID " + id + " não encontrado para exclusão");
+        }
         produtoRepository.deleteById(id);
     }
 }
-
-

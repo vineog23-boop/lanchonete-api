@@ -8,41 +8,59 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-
 public class EntregadorService {
 
     private final EntregadorRepository entregadorRepository;
 
-    public EntregadorResponse save (EntregadorRequest entregadorRequest) {
-                                                                                // MÉTODO CREATE
-        Entregador entregador = new Entregador();
-        entregador.setNome(entregadorRequest.nome());
-        entregador.setCelular(entregadorRequest.celular());
+    public EntregadorResponse save(EntregadorRequest entregadorRequest) {
 
-        Entregador salvo = entregadorRepository.save(entregador);
+        Entregador entregadorEntity = new Entregador();
+        entregadorEntity.setNome(entregadorRequest.nome());
+        entregadorEntity.setCelular(entregadorRequest.celular());
 
-        return new EntregadorResponse (salvo.getId(), salvo.getNome(), salvo.getCelular());
+        Entregador entregadorSalvo = entregadorRepository.save(entregadorEntity);
+
+        return new EntregadorResponse(entregadorSalvo.getId(), entregadorSalvo.getNome(), entregadorSalvo.getCelular());
     }
 
+    public EntregadorResponse findById(Integer id) {
+        Entregador entregadorExist = entregadorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("O Entregador selecionado: " + id + " não foi encontrado"));
 
-    public Entregador findById(Integer id) {
-        return entregadorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("O Entregador selecionado: " + ( id ) + " não foi encontrado"));
+        return new EntregadorResponse(entregadorExist.getId(), entregadorExist.getNome(), entregadorExist.getCelular());
     }
 
-    public List<Entregador> findAll() {
-        return entregadorRepository.findAll();
+    public List<EntregadorResponse> findAll() {
+        return entregadorRepository.findAll()
+                .stream()
+                .map(entregador -> new EntregadorResponse(
+                        entregador.getId(),
+                        entregador.getNome(),
+                        entregador.getCelular()))
+                .collect(Collectors.toList());
     }
 
-    public Entregador update(Entregador entregador) {
-        return entregadorRepository.save(entregador);
+    public EntregadorResponse update(EntregadorRequest entregadorRequest, Integer id) {
+        Entregador entregadorExist = entregadorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Não foi possível atualizar o entregador com ID: " + id));
+
+        entregadorExist.setNome(entregadorRequest.nome());
+        entregadorExist.setCelular(entregadorRequest.celular());
+
+        Entregador entregadorUpdated = entregadorRepository.save(entregadorExist);
+
+        return new EntregadorResponse(entregadorUpdated.getId(), entregadorUpdated.getNome(), entregadorUpdated.getCelular());
     }
 
     public void delete(Integer id) {
-      entregadorRepository.deleteById(id);
+        if (!entregadorRepository.existsById(id)) {
+            throw new RuntimeException("Entregador com ID " + id + " não encontrado para exclusão");
+        }
+        entregadorRepository.deleteById(id);
     }
 }
 

@@ -13,59 +13,56 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-
 public class ClienteService {
     private final ClienteRepository clienteRepository;
 
-    public ClienteResponse create (ClienteRequest clienteRequest) {
+    public ClienteResponse create(ClienteRequest request) {
+        Cliente entity = new Cliente();
+        entity.setNome(request.nome());
+        entity.setCelular(request.celular());
+        entity.setEmail(request.email());
+        entity.setDataNascimento(request.dataNascimento());
 
-        Cliente clienteEntity = new Cliente();
-        clienteEntity.setNome(clienteRequest.nome());
-        clienteEntity.setCelular(clienteRequest.celular());
-        clienteEntity.setEmail(clienteRequest.email());
-        clienteEntity.setDataNascimento(clienteRequest.dataNascimento());
-        ;
+        Cliente savedEntity = clienteRepository.save(entity);
 
-        Cliente clienteSalvo = clienteRepository.save(clienteEntity);
-
-        return new ClienteResponse(clienteSalvo.getId(), clienteSalvo.getNome(), clienteSalvo.getCelular(), clienteSalvo.getEmail(), clienteSalvo.getDataNascimento());
+        return new ClienteResponse(savedEntity.getId(), savedEntity.getNome(), savedEntity.getCelular(), savedEntity.getEmail(), savedEntity.getDataNascimento());
     }
-
 
     public ClienteResponse findByID(UUID id) {
-       Cliente clienteExist = clienteRepository.findById(id)
+        Cliente entity = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente com ID " + id + " não encontrado"));
-       return new ClienteResponse(clienteExist.getId(), clienteExist.getNome(), clienteExist.getCelular(), clienteExist.getEmail(), clienteExist.getDataNascimento());
-
-
+        return new ClienteResponse(entity.getId(), entity.getNome(), entity.getCelular(), entity.getEmail(), entity.getDataNascimento());
     }
 
-    public List<ClienteResponse>findAll() {                                        //Método READ todos
+    public List<ClienteResponse> findAll() {
         return clienteRepository.findAll()
                 .stream()
-                .map(cliente -> new ClienteResponse(
-                        cliente.getId(),
-                        cliente.getNome(),
-                        cliente.getCelular(),
-                        cliente.getEmail(),
-                        cliente.getDataNascimento()))
+                .map(entity -> new ClienteResponse(
+                        entity.getId(),
+                        entity.getNome(),
+                        entity.getCelular(),
+                        entity.getEmail(),
+                        entity.getDataNascimento()))
                 .collect(Collectors.toList());
     }
 
-    public ClienteResponse update( UUID id, ClienteRequest cliente) {
-        Cliente clienteUpdate = clienteRepository.findById(id)
+    public ClienteResponse update(UUID id, ClienteRequest request) {
+        Cliente entity = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Não foi possível atualizar o cliente com ID: " + id));
-    clienteUpdate.setNome(cliente.nome());
-    clienteUpdate.setCelular(cliente.celular());
-    clienteUpdate.setEmail(cliente.email());
-    clienteUpdate.setDataNascimento(cliente.dataNascimento());
 
-    return new ClienteResponse(
-            clienteUpdate.getId(),
-            clienteUpdate.getNome(),
-            clienteUpdate.getCelular(),
-            clienteUpdate.getEmail(),
-            clienteUpdate.getDataNascimento());
+        entity.setNome(request.nome());
+        entity.setCelular(request.celular());
+        entity.setEmail(request.email());
+        entity.setDataNascimento(request.dataNascimento());
+
+        Cliente savedEntity = clienteRepository.save(entity);
+
+        return new ClienteResponse(
+                savedEntity.getId(),
+                savedEntity.getNome(),
+                savedEntity.getCelular(),
+                savedEntity.getEmail(),
+                savedEntity.getDataNascimento());
     }
 
     public void delete(UUID id) {
@@ -74,9 +71,4 @@ public class ClienteService {
         }
         clienteRepository.deleteById(id);
     }
-
-
-    }
-
-
-
+}
