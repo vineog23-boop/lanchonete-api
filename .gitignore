@@ -35,3 +35,20 @@ build/
 
 memory/
 .claude/worktrees/
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Binary/Large files
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.zip
+*.rar
+*.7z
+# Keep important documentation diagrams
+!docs/db_central.png
+!docs/db_central.jpg

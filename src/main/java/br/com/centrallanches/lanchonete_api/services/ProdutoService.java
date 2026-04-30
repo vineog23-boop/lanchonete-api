@@ -29,7 +29,7 @@ public class ProdutoService {
 
     public ProdutoResponse findById(Integer id) {
         Produto entity = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto com ID: " + id + " não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Produto com ID: " + id + " não encontrado")) ;
 
         return new ProdutoResponse(entity.getId(), entity.getNome(), entity.getPreco(), entity.getCategoria());
     }
