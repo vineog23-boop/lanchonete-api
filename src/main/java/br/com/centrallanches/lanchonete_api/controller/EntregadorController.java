@@ -3,6 +3,7 @@ package br.com.centrallanches.lanchonete_api.controller;
 import br.com.centrallanches.lanchonete_api.dto.request.EntregadorRequest;
 import br.com.centrallanches.lanchonete_api.dto.response.EntregadorResponse;
 import br.com.centrallanches.lanchonete_api.services.EntregadorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class EntregadorController {
     private final EntregadorService entregadorService;
 
     @PostMapping
-    public ResponseEntity<EntregadorResponse> save(@RequestBody EntregadorRequest entregadorRequest){
+    public ResponseEntity<EntregadorResponse> save(@Valid @RequestBody EntregadorRequest entregadorRequest){
         EntregadorResponse entregadorCriado = entregadorService.save(entregadorRequest);
 
         return ResponseEntity.status(201).body(entregadorCriado);
@@ -37,7 +38,7 @@ public class EntregadorController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<EntregadorResponse> update(@PathVariable Integer id, @RequestBody EntregadorRequest entregadorRequest){
+    public ResponseEntity<EntregadorResponse> update(@PathVariable Integer id, @Valid @RequestBody EntregadorRequest entregadorRequest){
         EntregadorResponse entregadorAtualizado = entregadorService.update(entregadorRequest, id);
         return ResponseEntity.ok(entregadorAtualizado);
     }

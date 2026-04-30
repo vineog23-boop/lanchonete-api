@@ -1,0 +1,57 @@
+# Build Java/Maven
+target/
+build/
+out/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Git
+.git/
+
+# Logs
+logs/
+*.log
+
+# Env/secrets
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+*.p12
+*.jks
+secrets.*
+credentials.*
+application-local.properties
+application-local.yml
+application-prod.properties
+application-prod.yml
+
+# Front/build extras
+node_modules/
+dist/
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Large/binary
+*.zip
+*.rar
+*.7z
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.pdf

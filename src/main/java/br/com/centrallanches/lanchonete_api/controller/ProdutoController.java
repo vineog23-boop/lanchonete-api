@@ -3,6 +3,7 @@ package br.com.centrallanches.lanchonete_api.controller;
 import br.com.centrallanches.lanchonete_api.dto.request.ProdutoRequest;
 import br.com.centrallanches.lanchonete_api.dto.response.ProdutoResponse;
 import br.com.centrallanches.lanchonete_api.services.ProdutoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ProdutoController {
     private final ProdutoService produtoService;
 
     @PostMapping
-    public ResponseEntity<ProdutoResponse> save(@RequestBody ProdutoRequest produtoRequest) {
+    public ResponseEntity<ProdutoResponse> save(@Valid @RequestBody ProdutoRequest produtoRequest) {
         ProdutoResponse produtoCriado = produtoService.save(produtoRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(produtoCriado);
     }
@@ -36,7 +37,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> update(@PathVariable Integer id, @RequestBody ProdutoRequest produtoRequest) {
+    public ResponseEntity<ProdutoResponse> update(@PathVariable Integer id, @Valid @RequestBody ProdutoRequest produtoRequest) {
         ProdutoResponse produtoUpdate = produtoService.update(produtoRequest, id);
         return ResponseEntity.ok(produtoUpdate);
     }

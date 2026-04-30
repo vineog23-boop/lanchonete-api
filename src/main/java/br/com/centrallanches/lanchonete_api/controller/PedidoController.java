@@ -3,6 +3,7 @@ package br.com.centrallanches.lanchonete_api.controller;
 import br.com.centrallanches.lanchonete_api.dto.request.PedidoRequest;
 import br.com.centrallanches.lanchonete_api.dto.response.PedidoResponse;
 import br.com.centrallanches.lanchonete_api.services.PedidoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class PedidoController {
     private final PedidoService pedidoService;
 
     @PostMapping()
-    public ResponseEntity <PedidoResponse>  create(@RequestBody PedidoRequest pedidoRequest){
+    public ResponseEntity <PedidoResponse>  create(@Valid @RequestBody PedidoRequest pedidoRequest){
         PedidoResponse pedidoCriado = pedidoService.create(pedidoRequest);
         return ResponseEntity.status(201).body(pedidoCriado);
     }
@@ -37,7 +38,7 @@ public class PedidoController {
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<PedidoResponse> update(@PathVariable UUID id, @RequestBody PedidoRequest pedidoRequest){
+    public ResponseEntity<PedidoResponse> update(@PathVariable UUID id, @Valid @RequestBody PedidoRequest pedidoRequest){
         PedidoResponse pedidoAtualizad = pedidoService.update(id, pedidoRequest);
         return ResponseEntity.ok(pedidoAtualizad);
     }
