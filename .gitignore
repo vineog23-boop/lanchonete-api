@@ -51,4 +51,6 @@ desktop.ini
 *.7z
 # Keep important documentation diagrams
 !docs/db_central.png
-!docs/db_central.jpg
+!docs/db_central.jpg.claude/
+memory/
+.geminiignore
