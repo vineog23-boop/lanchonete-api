@@ -4,6 +4,7 @@ import br.com.centrallanches.lanchonete_api.dto.request.ProdutoRequest;
 import br.com.centrallanches.lanchonete_api.dto.response.ProdutoResponse;
 import br.com.centrallanches.lanchonete_api.entity.Produto;
 import br.com.centrallanches.lanchonete_api.repository.ProdutoRepository;
+import br.com.centrallanches.lanchonete_api.exception.ResourceNotFoundException; // Import adicionado
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class ProdutoService {
 
     public ProdutoResponse findById(Integer id) {
         Produto entity = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto com ID: " + id + " não encontrado")) ;
+                .orElseThrow(() -> new ResourceNotFoundException("Produto com ID: " + id + " não encontrado")); // Alterado
 
         return new ProdutoResponse(entity.getId(), entity.getNome(), entity.getPreco(), entity.getCategoria());
     }
@@ -43,7 +44,7 @@ public class ProdutoService {
 
     public ProdutoResponse update(ProdutoRequest request, Integer id) {
         Produto entity = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto com ID: " + id + " não encontrado para atualização"));
+                .orElseThrow(() -> new ResourceNotFoundException("Produto com ID: " + id + " não encontrado para atualização")); // Alterado
 
         entity.setNome(request.nome());
         entity.setPreco(request.preco());
@@ -56,7 +57,7 @@ public class ProdutoService {
 
     public void delete(Integer id) {
         if (!produtoRepository.existsById(id)) {
-            throw new RuntimeException("Produto com ID " + id + " não encontrado para exclusão");
+            throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado para exclusão"); // Alterado
         }
         produtoRepository.deleteById(id);
     }
