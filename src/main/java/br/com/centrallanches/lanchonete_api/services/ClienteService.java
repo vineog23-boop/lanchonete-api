@@ -4,6 +4,7 @@ import br.com.centrallanches.lanchonete_api.dto.request.ClienteRequest;
 import br.com.centrallanches.lanchonete_api.dto.response.ClienteResponse;
 import br.com.centrallanches.lanchonete_api.entity.Cliente;
 import br.com.centrallanches.lanchonete_api.repository.ClienteRepository;
+import br.com.centrallanches.lanchonete_api.exception.ResourceNotFoundException; // Import adicionado
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class ClienteService {
 
     public ClienteResponse findByID(UUID id) {
         Cliente entity = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente com ID " + id + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente com ID " + id + " não encontrado")); // Alterado
         return new ClienteResponse(entity.getId(), entity.getNome(), entity.getCelular(), entity.getEmail(), entity.getDataNascimento());
     }
 
@@ -48,7 +49,7 @@ public class ClienteService {
 
     public ClienteResponse update(UUID id, ClienteRequest request) {
         Cliente entity = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Não foi possível atualizar o cliente com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível atualizar o cliente com ID: " + id)); // Alterado
 
         entity.setNome(request.nome());
         entity.setCelular(request.celular());
@@ -67,7 +68,7 @@ public class ClienteService {
 
     public void delete(UUID id) {
         if (!clienteRepository.existsById(id)) {
-            throw new RuntimeException("Cliente com ID " + id + " não encontrado para exclusão");
+            throw new ResourceNotFoundException("Cliente com ID " + id + " não encontrado para exclusão"); // Alterado
         }
         clienteRepository.deleteById(id);
     }

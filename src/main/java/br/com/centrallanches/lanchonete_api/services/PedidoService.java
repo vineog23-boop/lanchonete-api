@@ -10,6 +10,7 @@ import br.com.centrallanches.lanchonete_api.repository.ClienteRepository;
 import br.com.centrallanches.lanchonete_api.repository.EnderecoRepository;
 import br.com.centrallanches.lanchonete_api.repository.PedidoRepository;
 import br.com.centrallanches.lanchonete_api.repository.ProdutoRepository;
+import br.com.centrallanches.lanchonete_api.exception.ResourceNotFoundException; // Import adicionado
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +31,9 @@ public class PedidoService {
 
     public PedidoResponse create(PedidoRequest request) {
         Cliente cliente = clienteRepository.findById(request.clienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado")); // Alterado
         Endereco endereco = enderecoRepository.findById(request.enderecoId())
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado")); // Alterado
 
         Pedido entity = new Pedido();
         entity.setCliente(cliente);
@@ -67,26 +68,26 @@ public class PedidoService {
 
     public PedidoResponse findById(UUID id) {
         Pedido entity = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido com ID " + id + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido com ID " + id + " não encontrado")); // Alterado
 
         return new PedidoResponse(
                 entity.getId(),
                 entity.getCliente().getId(),
                 entity.getEndereco().getId(),
                 entity.getStatus(),
-                entity.getValorTotal(),
+                savedEntity.getValorTotal(),
                 new ArrayList<>()
         );
     }
 
     public PedidoResponse update(UUID id, PedidoRequest request) {
         Pedido entity = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido com ID " + id + " não encontrado para atualização"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido com ID " + id + " não encontrado para atualização")); // Alterado
 
         Cliente cliente = clienteRepository.findById(request.clienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado")); // Alterado
         Endereco endereco = enderecoRepository.findById(request.enderecoId())
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado")); // Alterado
 
         entity.setCliente(cliente);
         entity.setEndereco(endereco);
@@ -105,7 +106,7 @@ public class PedidoService {
 
     public void delete(UUID id) {
         if (!pedidoRepository.existsById(id)) {
-            throw new RuntimeException("Pedido com ID " + id + " não encontrado para exclusão");
+            throw new ResourceNotFoundException("Pedido com ID " + id + " não encontrado para exclusão"); // Alterado
         }
         pedidoRepository.deleteById(id);
     }

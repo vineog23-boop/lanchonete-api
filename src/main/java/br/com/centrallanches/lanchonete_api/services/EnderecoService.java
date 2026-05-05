@@ -4,6 +4,7 @@ import br.com.centrallanches.lanchonete_api.dto.request.EnderecoRequest;
 import br.com.centrallanches.lanchonete_api.dto.response.EnderecoResponse;
 import br.com.centrallanches.lanchonete_api.entity.Endereco;
 import br.com.centrallanches.lanchonete_api.repository.EnderecoRepository;
+import br.com.centrallanches.lanchonete_api.exception.ResourceNotFoundException; // Import adicionado
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class EnderecoService {
 
     public EnderecoResponse findById(UUID id) {
         Endereco entity = enderecoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Endereço com ID: " + id + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço com ID: " + id + " não encontrado")); // Alterado
 
         return new EnderecoResponse(entity.getId(), entity.getLogradouro(), entity.getNumero(), entity.getCep(), entity.getBairro(), entity.getCidade(), entity.getEstado());
     }
@@ -47,7 +48,7 @@ public class EnderecoService {
 
     public EnderecoResponse update(EnderecoRequest request, UUID id) {
         Endereco entity = enderecoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Não foi possível atualizar o endereço com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível atualizar o endereço com ID: " + id)); // Alterado
 
         entity.setLogradouro(request.logradouro());
         entity.setNumero(request.numero());
@@ -64,7 +65,7 @@ public class EnderecoService {
 
     public void delete(UUID id) {
         if (!enderecoRepository.existsById(id)) {
-            throw new RuntimeException("Endereço com ID " + id + " não encontrado para exclusão");
+            throw new ResourceNotFoundException("Endereço com ID " + id + " não encontrado para exclusão"); // Alterado
         }
         enderecoRepository.deleteById(id);
     }

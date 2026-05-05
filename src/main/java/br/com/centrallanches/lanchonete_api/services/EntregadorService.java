@@ -4,6 +4,7 @@ import br.com.centrallanches.lanchonete_api.dto.request.EntregadorRequest;
 import br.com.centrallanches.lanchonete_api.dto.response.EntregadorResponse;
 import br.com.centrallanches.lanchonete_api.entity.Entregador;
 import br.com.centrallanches.lanchonete_api.repository.EntregadorRepository;
+import br.com.centrallanches.lanchonete_api.exception.ResourceNotFoundException; // Import adicionado
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class EntregadorService {
 
     public EntregadorResponse findById(Integer id) {
         Entregador entregadorExist = entregadorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("O Entregador selecionado: " + id + " não foi encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("O Entregador selecionado: " + id + " não foi encontrado")); // Alterado
 
         return new EntregadorResponse(entregadorExist.getId(), entregadorExist.getNome(), entregadorExist.getCelular());
     }
@@ -46,7 +47,7 @@ public class EntregadorService {
 
     public EntregadorResponse update(EntregadorRequest entregadorRequest, Integer id) {
         Entregador entregadorExist = entregadorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Não foi possível atualizar o entregador com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível atualizar o entregador com ID: " + id)); // Alterado
 
         entregadorExist.setNome(entregadorRequest.nome());
         entregadorExist.setCelular(entregadorRequest.celular());
@@ -58,10 +59,8 @@ public class EntregadorService {
 
     public void delete(Integer id) {
         if (!entregadorRepository.existsById(id)) {
-            throw new RuntimeException("Entregador com ID " + id + " não encontrado para exclusão");
+            throw new ResourceNotFoundException("Entregador com ID " + id + " não encontrado para exclusão"); // Alterado
         }
         entregadorRepository.deleteById(id);
     }
 }
-
-
