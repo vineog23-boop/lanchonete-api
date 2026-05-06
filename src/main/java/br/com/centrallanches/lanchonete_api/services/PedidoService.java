@@ -43,26 +43,13 @@ public class PedidoService {
 
         Pedido savedEntity = pedidoRepository.save(entity);
 
-        return new PedidoResponse(
-                savedEntity.getId(),
-                savedEntity.getCliente().getId(),
-                savedEntity.getEndereco().getId(),
-                savedEntity.getStatus(),
-                savedEntity.getValorTotal(),
-                new ArrayList<>()
-        );
+        return toPedidoResponse(savedEntity);
     }
 
     public List<PedidoResponse> findAll() {
         return pedidoRepository.findAll()
                 .stream()
-                .map(entity -> new PedidoResponse(
-                        entity.getId(),
-                        entity.getCliente().getId(),
-                        entity.getEndereco().getId(),
-                        entity.getStatus(),
-                        entity.getValorTotal(),
-                        new ArrayList<>()))
+                .map(this::toPedidoResponse)
                 .collect(Collectors.toList());
     }
 
@@ -70,14 +57,7 @@ public class PedidoService {
         Pedido entity = pedidoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido com ID " + id + " não encontrado")); // Alterado
 
-        return new PedidoResponse(
-                entity.getId(),
-                entity.getCliente().getId(),
-                entity.getEndereco().getId(),
-                entity.getStatus(),
-                savedEntity.getValorTotal(),
-                new ArrayList<>()
-        );
+        return toPedidoResponse(entity);
     }
 
     public PedidoResponse update(UUID id, PedidoRequest request) {
@@ -94,14 +74,7 @@ public class PedidoService {
 
         Pedido savedEntity = pedidoRepository.save(entity);
 
-        return new PedidoResponse(
-                savedEntity.getId(),
-                savedEntity.getCliente().getId(),
-                savedEntity.getEndereco().getId(),
-                savedEntity.getStatus(),
-                savedEntity.getValorTotal(),
-                new ArrayList<>()
-        );
+        return toPedidoResponse(savedEntity);
     }
 
     public void delete(UUID id) {
@@ -109,5 +82,15 @@ public class PedidoService {
             throw new ResourceNotFoundException("Pedido com ID " + id + " não encontrado para exclusão"); // Alterado
         }
         pedidoRepository.deleteById(id);
+    }
+    private PedidoResponse toPedidoResponse(Pedido pedido) {
+        return new PedidoResponse(
+                pedido.getId(),
+                pedido.getCliente().getId(),
+                pedido.getEndereco().getId(),
+                pedido.getStatus(),
+                pedido.getValorTotal(),
+                new ArrayList<>()
+        );
     }
 }

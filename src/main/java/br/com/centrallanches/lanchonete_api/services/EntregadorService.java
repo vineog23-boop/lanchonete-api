@@ -25,23 +25,20 @@ public class EntregadorService {
 
         Entregador entregadorSalvo = entregadorRepository.save(entregadorEntity);
 
-        return new EntregadorResponse(entregadorSalvo.getId(), entregadorSalvo.getNome(), entregadorSalvo.getCelular());
+        return toEntregadorResponse(entregadorSalvo);
     }
 
     public EntregadorResponse findById(Integer id) {
         Entregador entregadorExist = entregadorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("O Entregador selecionado: " + id + " não foi encontrado")); // Alterado
 
-        return new EntregadorResponse(entregadorExist.getId(), entregadorExist.getNome(), entregadorExist.getCelular());
+        return toEntregadorResponse(entregadorExist);
     }
 
     public List<EntregadorResponse> findAll() {
         return entregadorRepository.findAll()
                 .stream()
-                .map(entregador -> new EntregadorResponse(
-                        entregador.getId(),
-                        entregador.getNome(),
-                        entregador.getCelular()))
+                .map(this::toEntregadorResponse)
                 .collect(Collectors.toList());
     }
 
@@ -54,7 +51,7 @@ public class EntregadorService {
 
         Entregador entregadorUpdated = entregadorRepository.save(entregadorExist);
 
-        return new EntregadorResponse(entregadorUpdated.getId(), entregadorUpdated.getNome(), entregadorUpdated.getCelular());
+        return toEntregadorResponse(entregadorUpdated);
     }
 
     public void delete(Integer id) {
@@ -62,5 +59,12 @@ public class EntregadorService {
             throw new ResourceNotFoundException("Entregador com ID " + id + " não encontrado para exclusão"); // Alterado
         }
         entregadorRepository.deleteById(id);
+    }
+
+    private EntregadorResponse toEntregadorResponse(Entregador entregador) {
+        return new EntregadorResponse(
+                entregador.getId(),
+                entregador.getNome(),
+                entregador.getCelular());
     }
 }

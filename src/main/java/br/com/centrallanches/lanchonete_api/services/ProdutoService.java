@@ -25,20 +25,20 @@ public class ProdutoService {
 
         Produto savedEntity = produtoRepository.save(entity);
 
-        return new ProdutoResponse(savedEntity.getId(), savedEntity.getNome(), savedEntity.getPreco(), savedEntity.getCategoria());
+        return toProdutoResponse(savedEntity);
     }
 
     public ProdutoResponse findById(Integer id) {
         Produto entity = produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto com ID: " + id + " não encontrado")); // Alterado
 
-        return new ProdutoResponse(entity.getId(), entity.getNome(), entity.getPreco(), entity.getCategoria());
+        return toProdutoResponse(entity);
     }
 
     public List<ProdutoResponse> findAll() {
         return produtoRepository.findAll()
                 .stream()
-                .map(entity -> new ProdutoResponse(entity.getId(), entity.getNome(), entity.getPreco(), entity.getCategoria()))
+                .map(this::toProdutoResponse)
                 .collect(Collectors.toList());
     }
 
@@ -52,7 +52,7 @@ public class ProdutoService {
 
         Produto savedEntity = produtoRepository.save(entity);
 
-        return new ProdutoResponse(savedEntity.getId(), savedEntity.getNome(), savedEntity.getPreco(), savedEntity.getCategoria());
+        return toProdutoResponse(savedEntity);
     }
 
     public void delete(Integer id) {
@@ -60,5 +60,12 @@ public class ProdutoService {
             throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado para exclusão"); // Alterado
         }
         produtoRepository.deleteById(id);
+    }
+    private ProdutoResponse toProdutoResponse(Produto produto) {
+        return new ProdutoResponse(
+                produto.getId(),
+                produto.getNome(),
+                produto.getPreco(),
+                produto.getCategoria());
     }
 }

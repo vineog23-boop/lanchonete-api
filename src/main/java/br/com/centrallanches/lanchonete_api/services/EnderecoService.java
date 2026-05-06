@@ -2,9 +2,11 @@ package br.com.centrallanches.lanchonete_api.services;
 
 import br.com.centrallanches.lanchonete_api.dto.request.EnderecoRequest;
 import br.com.centrallanches.lanchonete_api.dto.response.EnderecoResponse;
+import br.com.centrallanches.lanchonete_api.entity.Cliente;
 import br.com.centrallanches.lanchonete_api.entity.Endereco;
+import br.com.centrallanches.lanchonete_api.repository.ClienteRepository;
 import br.com.centrallanches.lanchonete_api.repository.EnderecoRepository;
-import br.com.centrallanches.lanchonete_api.exception.ResourceNotFoundException; // Import adicionado
+import br.com.centrallanches.lanchonete_api.exception.ResourceNotFoundException; 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,14 @@ import java.util.UUID;
 public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
+    private final ClienteRepository clienteRepository;
 
     public EnderecoResponse save(EnderecoRequest request) {
+        Cliente cliente = clienteRepository.findById(request.clienteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+
         Endereco entity = new Endereco();
+        entity.setCliente(cliente);
         entity.setLogradouro(request.logradouro());
         entity.setNumero(request.numero());
         entity.setCep(request.cep());
@@ -29,26 +36,28 @@ public class EnderecoService {
 
         Endereco savedEntity = enderecoRepository.save(entity);
 
-        return new EnderecoResponse(savedEntity.getId(), savedEntity.getLogradouro(), savedEntity.getNumero(), savedEntity.getCep(), savedEntity.getBairro(), savedEntity.getCidade(), savedEntity.getEstado());
+        return  toEnderecoResponse(savedEntity);
+
     }
+
 
     public EnderecoResponse findById(UUID id) {
         Endereco entity = enderecoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Endereço com ID: " + id + " não encontrado")); // Alterado
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço com ID: " + id + " não encontrado"));
 
-        return new EnderecoResponse(entity.getId(), entity.getLogradouro(), entity.getNumero(), entity.getCep(), entity.getBairro(), entity.getCidade(), entity.getEstado());
+        return toEnderecoResponse(entity);
     }
 
     public List<EnderecoResponse> findAll() {
         return enderecoRepository.findAll()
                 .stream()
-                .map(entity -> new EnderecoResponse(entity.getId(), entity.getLogradouro(), entity.getNumero(), entity.getCep(), entity.getBairro(), entity.getCidade(), entity.getEstado()))
+                .map(this::toEnderecoResponse)
                 .toList();
     }
 
     public EnderecoResponse update(EnderecoRequest request, UUID id) {
         Endereco entity = enderecoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível atualizar o endereço com ID: " + id)); // Alterado
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível atualizar o endereço com ID: " + id));
 
         entity.setLogradouro(request.logradouro());
         entity.setNumero(request.numero());
@@ -60,13 +69,28 @@ public class EnderecoService {
 
         Endereco savedEntity = enderecoRepository.save(entity);
 
-        return new EnderecoResponse(savedEntity.getId(), savedEntity.getLogradouro(), savedEntity.getNumero(), savedEntity.getCep(), savedEntity.getBairro(), savedEntity.getCidade(), savedEntity.getEstado());
+        return toEnderecoResponse(savedEntity);
     }
 
     public void delete(UUID id) {
         if (!enderecoRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Endereço com ID " + id + " não encontrado para exclusão"); // Alterado
+            throw new ResourceNotFoundException("Endereço com ID " + id + " não encontrado para exclusão");
         }
         enderecoRepository.deleteById(id);
+
+    }
+
+    private EnderecoResponse toEnderecoResponse(Endereco endereco) {
+        return new EnderecoResponse(
+                endereco.getId(),
+                endereco.getLogradouro(),
+                endereco.getNumero(),
+                endereco.getBairro(),
+                endereco.getCidade(),
+                endereco.getEstado(),
+                endereco.getCep(),
+                endereco.getComplemento() );
     }
 }
+
+

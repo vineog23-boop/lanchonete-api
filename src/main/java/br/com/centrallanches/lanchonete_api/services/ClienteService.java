@@ -26,24 +26,19 @@ public class ClienteService {
 
         Cliente savedEntity = clienteRepository.save(entity);
 
-        return new ClienteResponse(savedEntity.getId(), savedEntity.getNome(), savedEntity.getCelular(), savedEntity.getEmail(), savedEntity.getDataNascimento());
+        return toClienteResponse(savedEntity);
     }
 
     public ClienteResponse findByID(UUID id) {
         Cliente entity = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente com ID " + id + " não encontrado")); // Alterado
-        return new ClienteResponse(entity.getId(), entity.getNome(), entity.getCelular(), entity.getEmail(), entity.getDataNascimento());
+        return toClienteResponse(entity);
     }
 
     public List<ClienteResponse> findAll() {
         return clienteRepository.findAll()
                 .stream()
-                .map(entity -> new ClienteResponse(
-                        entity.getId(),
-                        entity.getNome(),
-                        entity.getCelular(),
-                        entity.getEmail(),
-                        entity.getDataNascimento()))
+                .map(this::toClienteResponse)
                 .collect(Collectors.toList());
     }
 
@@ -58,12 +53,7 @@ public class ClienteService {
 
         Cliente savedEntity = clienteRepository.save(entity);
 
-        return new ClienteResponse(
-                savedEntity.getId(),
-                savedEntity.getNome(),
-                savedEntity.getCelular(),
-                savedEntity.getEmail(),
-                savedEntity.getDataNascimento());
+        return toClienteResponse(savedEntity);
     }
 
     public void delete(UUID id) {
@@ -71,5 +61,14 @@ public class ClienteService {
             throw new ResourceNotFoundException("Cliente com ID " + id + " não encontrado para exclusão"); // Alterado
         }
         clienteRepository.deleteById(id);
+    }
+
+    private ClienteResponse toClienteResponse(Cliente cliente) {
+        return new ClienteResponse(
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getCelular(),
+                cliente.getEmail(),
+                cliente.getDataNascimento());
     }
 }

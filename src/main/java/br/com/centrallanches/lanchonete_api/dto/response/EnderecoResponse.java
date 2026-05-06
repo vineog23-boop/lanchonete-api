@@ -7,6 +7,7 @@ public record EnderecoResponse(
         UUID id,
         String logradouro,
         String numero,
+        String bairro,
         String cidade,
         String estado,
         String cep,
